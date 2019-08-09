@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 //final Date date = new Date(System.currentTimeMillis());
+                Date date = new Date();
 
 
                 pop_db setData = new pop_db();
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 setData.setDown_payment(100);
                 setData.setAdvertisement("今ならお得！！！！");
                 setData.setUser_id("user0001");
-                setData.setCreated_at("time");
+                setData.setCreated_at(date.toString());
                 setData.setUpdate_at("time2");
                 setData.setTemplate_type(0);
                 setData.setProduct_info_url("http://product/info/");
