@@ -51,21 +51,22 @@ public class MainActivity extends AppCompatActivity {
                 //final Date date = new Date(System.currentTimeMillis());
                 Date date = new Date();
 
-
+                /*
                 pop_db setData = new pop_db();
-                setData.setPop_id("iphone_xs_001");
-                setData.setProduct_name("iphone_xs");
-                setData.setPrice(20000);
-                setData.setDown_payment(100);
+                setData.setPop_id("iphone_xs_002");
+                setData.setProduct_name("iphone_8");
+                setData.setPrice(30000);
+                setData.setDown_payment(200);
                 setData.setAdvertisement("今ならお得！！！！");
                 setData.setUser_id("user0001");
                 setData.setCreated_at(date.toString());
-                setData.setUpdate_at("time2");
+                //setData.setUpdate_at("time2");
                 setData.setTemplate_type(0);
                 setData.setProduct_info_url("http://product/info/");
                 System.out.println(setData);
                 mapper.save(setData);
-                /*
+                */
+
                 // 全レコード取得方法
                 List<pop_db> newsItem = mapper.scan(pop_db.class, new DynamoDBScanExpression());
 
@@ -75,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
                     System.out.format("ID=%s, Price=%s %n",
                             item.getPop_id(), item.getPrice());
                 }
-                pop_db item = mapper.load(pop_db.class, 11);
+                pop_db item = mapper.load(pop_db.class, "iphone_xs_002");
                 System.out.println("---------");
-                System.out.println(item);
+                System.out.println(item.getProduct_name());
                 //item.setPrice(1413240);
                 //mapper.save(item);
 
@@ -85,17 +86,18 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, Condition> conditions = new HashMap<String, Condition>();
                 Condition priceCondition = new Condition()
                         .withComparisonOperator(ComparisonOperator.EQ.toString())
-                        .withAttributeValueList(new AttributeValue().withN(Integer.toString(100)));
-                conditions.put("Price", priceCondition);
+                        .withAttributeValueList(new AttributeValue().withN(Integer.toString(20000)));
+                conditions.put("price", priceCondition);
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 scanExpression.setScanFilter(conditions);
                 List<pop_db> newItems = mapper.scan(pop_db.class, scanExpression);
                 Log.d("News Item:", newsItem.toString());
                 for (pop_db item2 : newItems) {
-                    System.out.format("ID=%s, Price=%s %n",
+                    System.out.println("---------");
+                    System.out.format("pop_id=%s, price=%s %n",
                             item2.getPop_id(), item2.getPrice());
                 }
-                */
+
             }
 
         }).start();
