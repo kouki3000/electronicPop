@@ -10,7 +10,7 @@ public class pop_db {
     private String product_name;
     private int price;
     private int down_payment;
-    private String advertisement; //　後でlistにする
+    private String advertisement; //　後でlistにする or 特殊文字で１文にする
     private String user_id;
     private String created_at;
     private String update_at;

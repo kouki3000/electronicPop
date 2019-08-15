@@ -1,13 +1,13 @@
 package com.example.electronicpop;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -19,13 +19,19 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private pop_db setData;
+    //private pop_db setData;
+    private user_db setData;
+    private EditText user_id_editText;
+    private EditText password_editText;
+    private Button login_button;
+    private String mode;
+    public static final String USER_ID
+            = "com.example.electronicpop.DATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         ddbClient.setRegion(apNortheast1);
 
         final DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+        /*
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -51,13 +58,12 @@ public class MainActivity extends AppCompatActivity {
                 //final Date date = new Date(System.currentTimeMillis());
                 Date date = new Date();
 
-                /*
                 pop_db setData = new pop_db();
-                setData.setPop_id("iphone_xs_002");
-                setData.setProduct_name("iphone_8");
-                setData.setPrice(30000);
-                setData.setDown_payment(200);
-                setData.setAdvertisement("今ならお得！！！！");
+                setData.setPop_id("iphone_xs_003");
+                setData.setProduct_name("iphone_1111");
+                setData.setPrice(40000);
+                setData.setDown_payment(50);
+                setData.setAdvertisement("aaaa今ならお得！！！！");
                 setData.setUser_id("user0001");
                 setData.setCreated_at(date.toString());
                 //setData.setUpdate_at("time2");
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 setData.setProduct_info_url("http://product/info/");
                 System.out.println(setData);
                 mapper.save(setData);
-                */
+
 
                 // 全レコード取得方法
                 List<pop_db> newsItem = mapper.scan(pop_db.class, new DynamoDBScanExpression());
@@ -101,5 +107,51 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }).start();
+        */
+        user_id_editText = findViewById(R.id.user_id_text);
+        password_editText = findViewById(R.id.password_text);
+        login_button = findViewById(R.id.login_button);
+
+        login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("------------------------------------");
+
+                        // loadでできるかな
+                        user_db user_item = mapper.load(user_db.class, user_id_editText.getText().toString());
+                        //System.out.format("id=%s, pass=%s, at=%s %n", user_item.getUser_id(), user_item.getPassword(), user_item.getCreated_at());
+
+                        //if (user_item == null){
+                            //ユーザIDが間違ってます
+                        //}
+
+                        if (user_item.getPassword().equals(password_editText.getText().toString())){
+                            mode = "admin";
+                            if (mode.equals("admin")){
+                                //管理者画面へ遷移
+                                Intent intent = new Intent(getApplication(), admin.class);
+                                intent.putExtra(USER_ID, user_item.getUser_id());
+                                startActivity(intent);
+                            }
+                            else {
+                                //ポップ選択画面へ遷移
+                            }
+                        }
+                        else{
+                            //パスワードが間違ってます
+                        }
+                    }
+                }).start();
+
+            }
+            });
+
+
+
     }
+
 }

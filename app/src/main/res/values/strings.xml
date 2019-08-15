@@ -2,4 +2,5 @@
     <string name="app_name">electronicPop</string>
     <string name="text_form_title">ユーザID</string>
     <string name="text_form_title2">パスワード</string>
+    <string name="login_button_text">LOGIN</string>
 </resources>
