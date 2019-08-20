@@ -88,6 +88,7 @@ public class pop_list extends AppCompatActivity {
 
     private void InitTable(List<pop_db> popItems){
         TableRow.LayoutParams row_style = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 2.0f);
+        TableRow.LayoutParams row_style_button = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1.0f);
 
         TableLayout pop_list_table = findViewById(R.id.pop_list);
         TableRow label = new TableRow(this);
@@ -95,8 +96,8 @@ public class pop_list extends AppCompatActivity {
         label.addView(createText("広告ID"), row_style);
         label.addView(createText("商品名"), row_style);
         label.addView(createText("値段"), row_style);
-        label.addView(createText("　"));
-        label.addView(createText("　"));
+        label.addView(createText(" "), row_style_button);
+        label.addView(createText(" "), row_style_button);
         for (pop_db item : popItems){
             pop_list_table.addView(createRow(item));
         }
