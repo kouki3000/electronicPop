@@ -119,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("------------------------------------");
-
                         // loadでできるかな
                         user_db user_item = mapper.load(user_db.class, user_id_editText.getText().toString());
                         //System.out.format("id=%s, pass=%s, at=%s %n", user_item.getUser_id(), user_item.getPassword(), user_item.getCreated_at());
