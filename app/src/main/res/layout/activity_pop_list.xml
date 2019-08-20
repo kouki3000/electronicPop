@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin">
+    tools:context=".pop_list">
 
     <TableLayout
-        android:id="@+id/device_list"
-        android:layout_width="713dp"
+        android:id="@+id/pop_list"
+        android:layout_width="715dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -16,7 +16,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/pop_list_button"
+        app:layout_constraintBottom_toTopOf="@+id/add_pop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,14 +24,13 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/pop_list_button"
+        android:id="@+id/add_pop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="9dp"
-        android:text="@string/pop_list_button_text"
+        android:layout_marginBottom="8dp"
+        android:text="@string/add_pop_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="@string/pop_list_button_text" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

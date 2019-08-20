@@ -25,19 +25,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class admin extends AppCompatActivity {
+public class pop_list extends AppCompatActivity {
 
     private String user_id;
-    Handler mHandler;
     private DynamoDBMapper mapper;
-    private Button pop_list_button;
-    public static final String USER_ID
-            = "com.example.electronicpop.DATA";
+    Handler mHandler;
+    private Button add_pop_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin);
+        setContentView(R.layout.activity_pop_list);
 
         mHandler = new Handler();
 
@@ -45,7 +43,6 @@ public class admin extends AppCompatActivity {
         Intent intent = getIntent();
         user_id = intent.getStringExtra(MainActivity.USER_ID);
 
-        // Amazon Cognito 認証情報プロバイダーを初期化します
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 getApplicationContext(),
                 "ap-northeast-1:bacfdb0c-ccc4-454b-9949-10bf45527c7d", // ID プールの ID
@@ -59,85 +56,50 @@ public class admin extends AppCompatActivity {
 
         //final DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
         mapper = new DynamoDBMapper(ddbClient);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Map<String, Condition> conditions_device = new HashMap<String, Condition>();
+                Map<String, Condition> conditions_pop = new HashMap<String, Condition>();
                 Condition user_Condition = new Condition()
                         .withComparisonOperator(ComparisonOperator.EQ.toString())
                         .withAttributeValueList(new AttributeValue().withS(user_id));
-                conditions_device.put("user_id", user_Condition);
+                conditions_pop.put("user_id", user_Condition);
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-                scanExpression.setScanFilter(conditions_device);
-                final List<device_db> deviceItems = mapper.scan(device_db.class, scanExpression);
-
-                final Map<String, pop_db> device_id_to_pop = new HashMap<String, pop_db>();
-                for (device_db item : deviceItems){
-                    Map<String, Condition> conditions_pop = new HashMap<String, Condition>();
-                    Condition user_id_Condition = new Condition()
-                            .withComparisonOperator(ComparisonOperator.EQ.toString())
-                            .withAttributeValueList(new AttributeValue().withS(user_id));
-                    Condition pop_id_Condition = new Condition()
-                            .withComparisonOperator(ComparisonOperator.EQ.toString())
-                            .withAttributeValueList(new AttributeValue().withS(item.getPop_id()));
-                    conditions_pop.put("user_id", user_id_Condition);
-                    conditions_pop.put("pop_id", pop_id_Condition);
-                    if (item.getPop_id() != null) {
-                        DynamoDBScanExpression scanExpression_pop = new DynamoDBScanExpression();
-                        scanExpression_pop.setScanFilter(conditions_pop);
-                        final List<pop_db> pop_Item = mapper.scan(pop_db.class, scanExpression_pop);
-                        device_id_to_pop.put(item.getDevice_id(), pop_Item.get(0));
-                    }
-                    else{
-                        device_id_to_pop.put(item.getDevice_id(), null);
-                    }
-                }
-                /*
-                for (String key : device_id_to_pop.keySet()){
-                    System.out.println("---------");
-                    System.out.println(key + " => " + device_id_to_pop.get(key));
-                }
-                */
-
-                // メインスレッドでui更新をする
+                scanExpression.setScanFilter(conditions_pop);
+                final List<pop_db> popItems = mapper.scan(pop_db.class, scanExpression);
                 mHandler.post(new Runnable() {
                     public void run() {
-                        InitTable(device_id_to_pop);
+                        InitTable(popItems);
                     }
                 });
             }
         }).start();
 
-
-        pop_list_button = findViewById(R.id.pop_list_button);
-        pop_list_button.setOnClickListener(new View.OnClickListener() {
+        add_pop_button = findViewById(R.id.add_pop);
+        add_pop_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplication(), pop_list.class);
-                intent.putExtra(USER_ID, user_id);
-                startActivity(intent);
+                AddPopDialog dialog = new AddPopDialog();
+                dialog.show(getFragmentManager(), "AddDialog");
             }
         });
-
     }
 
-    private void InitTable(Map<String, pop_db> device_pop){
+    private void InitTable(List<pop_db> popItems){
         TableRow.LayoutParams row_style = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 2.0f);
 
-        TableLayout pop_list_table = findViewById(R.id.device_list);
+        TableLayout pop_list_table = findViewById(R.id.pop_list);
         TableRow label = new TableRow(this);
         pop_list_table.addView(label);
-        label.addView(createText("デバイス名"), row_style);
-        label.addView(createText("商品名"), row_style);
         label.addView(createText("広告ID"), row_style);
+        label.addView(createText("商品名"), row_style);
         label.addView(createText("値段"), row_style);
-        label.addView(createText("分割払い頭金"), row_style);
-        label.addView(createText(""));
-        label.addView(createText(""));
-        for (String key: device_pop.keySet()){
-            pop_list_table.addView(createRow(key, device_pop.get(key)));
+        label.addView(createText("　"));
+        label.addView(createText("　"));
+        for (pop_db item : popItems){
+            pop_list_table.addView(createRow(item));
         }
-
     }
 
     private TextView createText(String text){
@@ -146,18 +108,62 @@ public class admin extends AppCompatActivity {
         return Text;
     }
 
-    private TableRow createRow(String device_id, pop_db pop){
+    private TableRow createRow(pop_db pop){
         TableRow.LayoutParams row_style = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 2.0f);
+        TableRow.LayoutParams row_style_button = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1.0f);
 
         TableRow row = new TableRow(this);
-        row.addView(createText(device_id), row_style);
         if (pop != null) {
-            row.addView(createText(pop.getProduct_name()), row_style);
             row.addView(createText(pop.getPop_id()), row_style);
+            row.addView(createText(pop.getProduct_name()), row_style);
             row.addView(createText(String.valueOf(pop.getPrice())), row_style);
-            row.addView(createText(String.valueOf(pop.getDown_payment())), row_style);
         }
+
+        row.addView(createDeleteButton(pop.getPop_id()), row_style_button);
+        row.addView(createEditButton(pop.getPop_id()), row_style_button);
+
         return row;
+    }
+
+    private Button createDeleteButton(final String pop_id){
+        Button button = new Button(this);
+        button.setText("delete");
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                DeletePopDialog dialog = new DeletePopDialog();
+                Bundle args = new Bundle();
+                args.putString("pop_id", pop_id); //引数
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "DeleteDialog");
+            }
+        });
+        return button;
+    }
+    private Button createEditButton(final String pop_id){
+        Button button = new Button(this);
+        button.setText("edit");
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                EditPopDialog dialog = new EditPopDialog();
+                Bundle args = new Bundle();
+                args.putString("pop_id", pop_id); //引数
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "EditDialog");
+            }
+        });
+        return button;
+    }
+
+    public void deletePop(final String pop_id){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pop_db delete_item = mapper.load(pop_db.class, pop_id);
+                mapper.delete(delete_item);
+            }
+        }).start();
+        finish();
+        startActivity(getIntent());
     }
 
 }

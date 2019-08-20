@@ -3,4 +3,6 @@
     <string name="text_form_title">ユーザID</string>
     <string name="text_form_title2">パスワード</string>
     <string name="login_button_text">LOGIN</string>
+    <string name="pop_list_button_text">POP一覧画面へ</string>
+    <string name="add_pop_button_text">+</string>
 </resources>
