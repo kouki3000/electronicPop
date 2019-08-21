@@ -31,6 +31,7 @@ public class pop_list extends AppCompatActivity {
     private DynamoDBMapper mapper;
     Handler mHandler;
     private Button add_pop_button;
+    private Button back_to_admin_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class pop_list extends AppCompatActivity {
 
         //前のアクティビティからのデータ受け取り
         Intent intent = getIntent();
-        user_id = intent.getStringExtra(MainActivity.USER_ID);
+        user_id = intent.getStringExtra("USER_ID");
 
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 getApplicationContext(),
@@ -76,12 +77,35 @@ public class pop_list extends AppCompatActivity {
             }
         }).start();
 
+        // pop追加ボタン
         add_pop_button = findViewById(R.id.add_pop);
         add_pop_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
+                // ダイアログより別ページのが良いっぽいから保留
                 AddPopDialog dialog = new AddPopDialog();
                 dialog.show(getFragmentManager(), "AddDialog");
+                */
+                Intent intent = new Intent(getApplication(), pop_add.class);
+                intent.putExtra("USER_ID", user_id);
+                startActivity(intent);
+            }
+        });
+
+        // adminページへ戻るボタン
+        back_to_admin_button = findViewById(R.id.back_to_admin_button);
+        back_to_admin_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                // ダイアログより別ページのが良いっぽいから保留
+                AddPopDialog dialog = new AddPopDialog();
+                dialog.show(getFragmentManager(), "AddDialog");
+                */
+                Intent intent = new Intent(getApplication(), admin.class);
+                intent.putExtra("USER_ID", user_id);
+                startActivity(intent);
             }
         });
     }
@@ -145,11 +169,19 @@ public class pop_list extends AppCompatActivity {
         button.setText("edit");
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                /*
                 EditPopDialog dialog = new EditPopDialog();
                 Bundle args = new Bundle();
                 args.putString("pop_id", pop_id); //引数
                 dialog.setArguments(args);
                 dialog.show(getFragmentManager(), "EditDialog");
+                */
+
+                Intent intent = new Intent(getApplication(), pop_edit.class);
+                intent.putExtra("USER_ID", user_id);
+                intent.putExtra("POP_ID", pop_id);
+                startActivity(intent);
+
             }
         });
         return button;

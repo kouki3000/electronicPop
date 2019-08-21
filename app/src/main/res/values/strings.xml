@@ -5,4 +5,20 @@
     <string name="login_button_text">LOGIN</string>
     <string name="pop_list_button_text">POP一覧画面へ</string>
     <string name="add_pop_button_text">+</string>
+    <string name="pop_id_view">広告ID</string>
+    <string name="product_name_view">商品名</string>
+    <string name="price_view">価格</string>
+    <string name="down_payment_view">分割払い頭金</string>
+    <string name="template_type_view">ポップテンプレートタイプ</string>
+    <string name="product_info_url_view">商品詳細</string>
+    <string name="add_confirm_button_text">追加</string>
+    <string name="add_cancel_button_text">キャンセル</string>
+    <string name="page_title_add_text">新しいPOPを作成します</string>
+    <string name="ad_view">広告文章1</string>
+    <string name="ad_view2">広告文章2</string>
+    <string name="ad_view3">広告文章3</string>
+    <string name="ad_view4">広告文章4</string>
+    <string name="back_to_admin_button_text">デバイス一覧へ戻る</string>
+    <string name="page_title_edit_text">POPを編集します</string>
+    <string name="edit_confirm_button_text">更新</string>
 </resources>

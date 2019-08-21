@@ -31,8 +31,7 @@ public class admin extends AppCompatActivity {
     Handler mHandler;
     private DynamoDBMapper mapper;
     private Button pop_list_button;
-    public static final String USER_ID
-            = "com.example.electronicpop.DATA";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,7 @@ public class admin extends AppCompatActivity {
 
         //前のアクティビティからのデータ受け取り
         Intent intent = getIntent();
-        user_id = intent.getStringExtra(MainActivity.USER_ID);
+        user_id = intent.getStringExtra("USER_ID");
 
         // Amazon Cognito 認証情報プロバイダーを初期化します
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -114,7 +113,7 @@ public class admin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication(), pop_list.class);
-                intent.putExtra(USER_ID, user_id);
+                intent.putExtra("USER_ID", user_id);
                 startActivity(intent);
             }
         });

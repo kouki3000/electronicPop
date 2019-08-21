@@ -30,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password_editText;
     private Button login_button;
     private String mode;
-    public static final String USER_ID
-            = "com.example.electronicpop.DATA";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                             if (mode.equals("admin")){
                                 //管理者画面へ遷移
                                 Intent intent = new Intent(getApplication(), admin.class);
-                                intent.putExtra(USER_ID, user_item.getUser_id());
+                                intent.putExtra("USER_ID", user_item.getUser_id());
                                 startActivity(intent);
                             }
                             else {
